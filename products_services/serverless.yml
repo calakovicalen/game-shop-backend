@@ -1,0 +1,24 @@
+service: products-services
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  versionFunctions: false
+  region: eu-west-1
+  environment:
+    frontendURL: https://d36uahjkec1cy3.cloudfront.net/
+
+functions:
+  getProductsList:
+    handler: handler.getProductsList
+    events:
+      - httpApi:
+          path: /products
+          method: get
+  getProductsById:
+    handler: handler.getProductsById
+    events:
+      - httpApi:
+          path: /products/{productId}
+          method: get
