@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/calakovicalen/game-shop-backend/issues"
   },
-  "homepage": "https://github.com/calakovicalen/game-shop-backend#readme"
+  "homepage": "https://github.com/calakovicalen/game-shop-backend#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1585.0",
+    "uuid": "^9.0.1"
+  }
 }

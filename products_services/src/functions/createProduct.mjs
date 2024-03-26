@@ -1,42 +1,38 @@
 import AWS from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
+
 const PRODUCTS_TABLE = 'products-table';
 
-export async function getProductById(event) {
+export async function createProduct(event) {
   try {
-    const productId = event.pathParameters.id;
+    const { title, description, price } = JSON.parse(event.body);
+
+    const productId = uuid();
 
     const productParams = {
       TableName: PRODUCTS_TABLE,
-      Key: {
-        id: productId,
+      Item: {
+        productId,
+        title,
+        description,
+        price,
       },
     };
 
-    const data = await dynamodb.get(productParams).promise();
-
-    if (!data.Item) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ message: 'Product not found' }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      };
-    }
+    await dynamodb.put(productParams).promise();
 
     return {
-      statusCode: 200,
-      body: JSON.stringify(data.Item),
+      statusCode: 201,
+      body: JSON.stringify({ productId }),
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
     };
   } catch (error) {
-    console.error('Error getting product by ID:', error);
+    console.error('Error creating product:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: `${error}` }),

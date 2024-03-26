@@ -1,0 +1,19 @@
+{
+  "name": "products_services",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.mjs",
+  "type": "module",
+  "scripts": {
+    "generate:products" : "node aws/populateProductsTable.js",
+    "generate:stocks" : "node aws/populateStocksTable.js",
+    "generate:data" : "node populateProductsTable.js && node populateStocksTable.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1585.0",
+    "uuid": "^9.0.1"
+  }
+}
