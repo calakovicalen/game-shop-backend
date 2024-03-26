@@ -1,0 +1,93 @@
+service: products-services
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  versionFunctions: false
+  region: eu-west-1
+  environment:
+    FRONTEND_URL: https://d36uahjkec1cy3.cloudfront.net/
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:BatchGetItem
+          Resource:
+            - Fn::GetAtt:
+                - ProductsTable
+                - Arn
+            - Fn::GetAtt:
+                - StocksTable
+                - Arn
+
+functions:
+  getProductsList:
+    handler: handler.getProductsList
+    events:
+      - httpApi:
+          path: /products
+          method: get
+  getProductsById:
+    handler: handler.getProductsById
+    events:
+      - httpApi:
+          path: /products/{productId}
+          method: get
+  createProduct:
+    handler: handler.createProduct
+    events:
+      - httpApi:
+          path: /products
+          method: post
+
+resources:
+  Resources:
+    ProductsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: products-table
+        AttributeDefinitions:
+          - AttributeName: productId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: productId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    StocksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: stocks-table
+        AttributeDefinitions:
+          - AttributeName: productId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: productId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+  Outputs:
+    ProductsTableArn:
+      Value:
+        Fn::GetAtt:
+          - ProductsTable
+          - Arn
+      Export:
+        Name: ProductsTableArn
+    StocksTableArn:
+      Value:
+        Fn::GetAtt:
+          - StocksTable
+          - Arn
+      Export:
+        Name: StocksTableArn
