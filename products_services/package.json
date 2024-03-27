@@ -7,7 +7,7 @@
   "scripts": {
     "generate:products" : "node aws/populateProductsTable.js",
     "generate:stocks" : "node aws/populateStocksTable.js",
-    "generate:data" : "node populateProductsTable.js && node populateStocksTable.js",
+    "generate:data" : "node aws/populateProductsTable.js && aws/node populateStocksTable.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
